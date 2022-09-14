@@ -1,0 +1,11 @@
+MDC Trivial x Euclides.
+
+O mdc de Euclides é mais eficiente que o Trivial,
+devido o fato de realizar menos interações computacionais.
+
+Exemplo: O MDC(317811, 514229)
+
+O algoritmo Trivial realiza 317811 vezes.
+Já o algortimo de Euclides realiza apenas 29 vezes.
+
+Fonte: Página do Prof. José Coelho de Pina Jr. da Universidade de São Paulo.

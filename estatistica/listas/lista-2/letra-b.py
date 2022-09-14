@@ -1,0 +1,26 @@
+from random import randint
+from statistics import median
+import statistics
+n1=randint(1, 100)
+n2=randint(1, 100)
+n3=randint(1, 100)
+n4=randint(1, 100)
+n5=randint(1, 100)
+n6=randint(1, 100)
+n7=randint(1, 100)
+n8=randint(1, 100)
+n9=randint(1, 100)
+n10=randint(1, 100)
+n11=randint(1, 100)
+n12=randint(1, 100)
+n13=randint(1, 100)
+n14=randint(1, 100)
+n15=randint(1, 100)
+n16=randint(1, 100)
+n17=randint(1, 100)
+n18=randint(1, 100)
+n19=randint(1, 100)
+n20=randint(1, 100)
+lista=[n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n10, n11, n12, n13, n14, n15, n16, n17, n18, n19, n20]
+q2=statistics.median(sorted(lista))
+print(f'Quartil 1: \nQuartil 2: {q2}\nQuartil 3: \n')
