@@ -103,3 +103,7 @@ class Cliente(Cadastro):
     def SeguroDeVida(self, valor_mensal, valor_total):
         self._valor_mensal = valor_mensal
         self._valor_total = valor_total
+
+    def historico(self):
+        print(f'conta corrente: {self._hist_trans_corrente}')
+        print(f'conta poupança: {self._hist_trans_poupanca}')
