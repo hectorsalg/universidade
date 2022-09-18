@@ -1,16 +1,12 @@
+from datetime import datetime
+
+
 class Cadastro:
 
     def __init__(self, nome, cpf, dt_nasc):
         self._nome = nome
         self._cpf = cpf
         self._dt_nasc = dt_nasc
-
-class CriaConta:
-
-    def __init__(self, numero, saldo, hist_trans):
-        self._numero = numero
-        self._saldo = saldo
-        self._hist_trans = hist_trans
 
 class Funcionario(Cadastro):
 
@@ -26,22 +22,22 @@ class Cliente(Cadastro):
         self._total_corrente = 0
         self._total_poupanca = 0
 
-    def contaCorrente(self, numero, saldo, hist_trans):
+    def contaCorrente(self, numero, saldo, hist_trans = 0):
         if self._total_corrente == 0:
             self._numero_corrente = numero
             self._saldo_corrente = saldo
-            self._hist_trans_corrente = hist_trans
+            self._hist_trans_corrente = []
             self._total_corrente += 1
             return True
         else:
             print('Não foi possível criar conta corrente, o usuário já possui!')
             return False
 
-    def contaPoupanca(self, numero, saldo, hist_trans):
+    def contaPoupanca(self, numero, saldo, hist_trans = 0):
         if self._total_poupanca == 0:
             self._numero_poupanca = numero
             self._saldo_poupanca = saldo
-            self._hist_trans_poupanca = hist_trans
+            self._hist_trans_poupanca = []
             self._total_poupanca += 1
             return True
         else:
@@ -53,6 +49,7 @@ class Cliente(Cadastro):
         if escolha == 'corrente':
             if self._saldo_corrente - valor >= 0:
                 self._saldo_corrente -= valor
+                self._hist_trans_corrente.append(f'- {valor}')
                 return True
             else:
                 print('Não foi possível realizar saque!')
@@ -60,6 +57,7 @@ class Cliente(Cadastro):
         elif escolha == 'poupanca':
             if self._saldo_poupanca - valor >= 0:
                 self._saldo_poupanca -= valor
+                self._hist_trans_poupanca.append(f'- {valor}')
                 return True
             else:
                 print('Não foi possível realizar saque!')
@@ -69,9 +67,11 @@ class Cliente(Cadastro):
         escolha = input('Digite a conta que deseja depositar: ')
         if escolha == 'corrente':
             self._saldo_corrente += valor
+            self._hist_trans_corrente.append(f'+ {valor}')
             return True
         elif escolha == 'poupanca':
             self._saldo_poupanca += valor
+            self._hist_trans_poupanca.append(f'+ {valor}')
             return True
     
     def transferir(self, cliente, valor):
@@ -79,7 +79,10 @@ class Cliente(Cadastro):
         if escolha == 'corrente':
             if self._saldo_corrente - valor >= 0:
                 self._saldo_corrente -= valor
-                cliente._saldo_corrente += valor
+                try:
+                    cliente._saldo_corrente += valor
+                except:
+                    cliente._saldo_poupanca += valor
                 return True
             else:
                 print('Não foi possível realizar transferência!')
@@ -88,7 +91,10 @@ class Cliente(Cadastro):
         elif escolha == 'poupanca':
             if self._saldo_poupanca - valor >= 0:
                 self._saldo_poupanca -= valor
-                cliente._saldo_poupanca += valor
+                try:
+                    cliente._saldo_corrente += valor
+                except:
+                    cliente._saldo_poupanca += valor
                 return True
             else:
                 print('Não foi possível realizar transferência!')
