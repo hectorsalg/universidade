@@ -2,6 +2,7 @@ import abc
 from random import randint
 from classes import *
  
+_total_corredores = {}
 class Autenticavel(abc.ABC):
 
     def autentica(self, numero):
@@ -11,11 +12,6 @@ class Cadastro(abc.ABC):
     def __init__(self, nome, empresa):
         self._nome = nome
         self._empresa = empresa
-
-    def __str__(self):
-        print(self._nome)
-        print(self._empresa)
-        return True
     
     @abc.abstractmethod
     def imprimir(self):
@@ -27,6 +23,11 @@ class Corredor(Cadastro):
         super().__init__(nome, empresa)
         self._carro = carro
         self._numero = numero
+        self._voltas_corredor = []
+        if numero not in _total_corredores.keys():
+            _total_corredores[numero] = [nome, empresa, carro, numero]
+        else:
+            print('Número de corredor já registrado!')
 
     @property
     def nome(self):
@@ -60,10 +61,19 @@ class Corredor(Cadastro):
     def numero(self, numero):
         self._numero = numero
 
-    def __str__(self):
-        super().__str__()
-        print(self.carro)
-        print(self.numero)
+    def addVolta(self):
+        if self._voltas_corredor != []:
+            self._voltas_corredor = [randint(100, 120), randint(100, 120), randint(100, 120)]
+            return True
+        else:
+            return False
+
+    def voltasCorredor(self):
+        print(self._voltas_corredor)
+        return True
+
+    def imprimir(self):
+        print(f'Nome: {self.nome}, Empresa: {self.empresa}, Carro: {self.carro}, Número: {self.numero}')
         return True
 
     def autentica(self, numero):
@@ -73,42 +83,7 @@ class Corredor(Cadastro):
         else:
             return False
 
-class Listas():
-
-    def __init__(self):
-        self._total_corredores = {}
-        self._voltas_corredor = {}
-
-    def addCorredor(self, nome, empresa, carro, numero):
-        if numero not in self._total_corredores.keys():
-            self._total_corredores[numero] = [nome, empresa, carro, numero]
-            self._voltas_corredor[numero] = []
-            return True, 'Corredor adicionado com sucesso!'
-        else:
-            return False, 'Número de corredor já cadastrado!'
-
-    def addVolta(self, numero):
-        if numero in self._voltas_corredor:
-            self._voltas_corredor[numero] = [randint(100, 120), randint(100, 120), randint(100, 120)]
-            return True, 'Voltas do corredor registradas com sucesso!'
-        else:
-            return False, 'Não foi possível realizar voltas!'
-
-    def voltasCorredor(self, numero):
-        if numero in self._voltas_corredor.keys():
-            print(self._voltas_corredor[numero])
-            return True, 'Visualização de voltas realizada com sucesso!'
-        else:
-            return False, 'Não foi possível realizar visualização de voltas!'
-
-    def detalhesCorredor(self, numero):
-        if numero in self._total_corredores.keys():
-            print(self._total_corredores[numero])
-            return True, 'Visualização de voltas realizada com sucesso!'
-            
-    def imprimirCorredores(self):
-        print(self._total_corredores)
-        return True
+class SistemaAutenticacao():
 
     def inscricao(self, obj):
         if isinstance(obj, Autenticavel):
