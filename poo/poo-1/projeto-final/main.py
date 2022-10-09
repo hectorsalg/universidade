@@ -5,7 +5,7 @@ total_corredores = {}
 l = Listas()
 
 def menu():
-    print('1 - Cadastrar Corredor\t2 - Partida de Corredores\t3 - Voltas de Corredor Específico\n4 - Imprimir Detalhes de Corredor\t5 - Imprimir Todos os Corredores\t6 - Sair')
+    print('1 - Cadastrar Corredor\t2 - Partida de Corredores\t3 - Voltas de Corredor Específico\n4 - Imprimir Detalhes de Corredor\t5 - Imprimir Todos os Corredores\t6- Verificar se Corredor foi Inscrito\n7 - Sair')
 
     return int(input('Digite uma opção: '))
 
@@ -54,4 +54,6 @@ while True:
         print(mensagem)
 
     elif op == 6:
+        l.inscricao()
+    elif op == 7:
         break

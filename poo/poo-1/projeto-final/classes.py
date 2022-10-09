@@ -1,6 +1,11 @@
 import abc
 from random import randint
+from classes import *
  
+class Autenticavel(abc.ABC):
+
+    def autentica(self, numero):
+        pass
 class Cadastro(abc.ABC):
 
     def __init__(self, nome, empresa):
@@ -11,7 +16,7 @@ class Cadastro(abc.ABC):
         print(self._nome)
         print(self._empresa)
         return True
-
+    
     @abc.abstractmethod
     def imprimir(self):
         pass
@@ -61,6 +66,13 @@ class Corredor(Cadastro):
         print(self.numero)
         return True
 
+    def autentica(self, numero):
+        if self.numero == numero:
+            print('Corredor Inscrito!')
+            return True
+        else:
+            return False
+
 class Listas():
 
     def __init__(self):
@@ -97,3 +109,11 @@ class Listas():
     def imprimirCorredores(self):
         print(self._total_corredores)
         return True
+
+    def inscricao(self, obj):
+        if isinstance(obj, Autenticavel):
+            numero = int(input('Informe o número do corredor: '))
+            return obj.autentica(numero)
+        else:
+            print('Método autentica não implementado!')
+            return False
