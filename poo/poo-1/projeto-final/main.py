@@ -53,7 +53,8 @@ while True:
         retorno, mensagem = imprimirLista()
         print(mensagem)
 
-    elif op == 6:
-        l.inscricao()
+    # elif op == 6:
+    #     l.inscricao()
+
     elif op == 7:
         break
