@@ -18,5 +18,9 @@ def main():
     minha_conta.historico.imprime()
     conta_dele.historico.imprime()
 
+    print(minha_conta.getTotalContas())
+    print(conta_dele.getTotalContas())
+    print(Conta.getTotalContas())
+
 
 main()

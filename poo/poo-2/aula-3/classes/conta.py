@@ -6,12 +6,22 @@ tempo = dt.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
 
 class Conta:
+
+    __slots__ = ['_numero', '_cliente', '_saldo', '_limite']
+
+    _total_contas = 0
+
+    @staticmethod
+    def getTotalContas():
+        return Conta._total_contas
+
     def __init__(self, numero, cliente, saldo, limite):
         self._numero = numero
         self._titular = cliente
         self._saldo = saldo
         self._limite = limite
         self._historico = Historico()
+        Conta._total_contas += 1
 
     # get and set numero
     @property
@@ -71,12 +81,12 @@ class Conta:
         else:
             destino.deposita(valor)
             self._historico.transacoes.append(
-                f'Transferência de {valor} para conta {destino.numero} na data {tempo}')
+                f'Transferência de {valor} para conta {destino._numero} na data {tempo}')
             destino._historico.transacoes.append(
-                f'Transferência de {valor} recebida de conta {self.numero} na data {tempo}')
+                f'Transferência de {valor} recebida de conta {self._numero} na data {tempo}')
             return True
 
     def extrato(self):
-        print(f'Numero: {self.numero}.\nSaldo: {self.saldo}.')
+        print(f'Numero: {self._numero}.\nSaldo: {self._saldo}.')
         self._historico.transacoes.append(
-            f'Tirou extrato - saldo de {self.saldo} na data {tempo}')
+            f'Tirou extrato - saldo de {self._saldo} na data {tempo}')
