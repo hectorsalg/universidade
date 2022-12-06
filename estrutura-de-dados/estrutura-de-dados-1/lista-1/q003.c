@@ -11,7 +11,6 @@ int pot(int x, int y){
 int main() {
 
     int x,y;
-    float media = 0.0;
     printf("Insira um valor: ");
     scanf("%i", &x);
     printf("Insira um valor: ");
