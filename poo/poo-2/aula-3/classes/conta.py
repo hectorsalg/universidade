@@ -7,7 +7,7 @@ tempo = dt.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
 class Conta:
 
-    __slots__ = ['_numero', '_cliente', '_saldo', '_limite']
+    __slots__ = ['_numero', '_titular', '_saldo', '_limite', '_historico']
 
     _total_contas = 0
 
