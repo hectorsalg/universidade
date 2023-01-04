@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Fasthand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+
+.containerHome {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    width: 90vw;
+    margin: 0 auto;
+    padding: 0em 2em;
+}
+
+.containerHome h1 {
+    margin-top: 0.5em;
+    font-size: 3em;
+    padding-bottom: 1em;
+    text-align: center;
+    color: #555;
+}
+
+.containerHome h2 {
+    margin-bottom: 1em;
+    text-align: center;
+    font-size: 2em;
+    max-width: 500px;
+    color: #333;
+}
+
+.containerHome p {
+    text-align: justify;
+    font-size: 1.5em;
+    font-weight: 500;
+    max-width: 500px;
+    color: #555;
+}
+
+.logo {
+    width: 200px;
+    transform: translateY(13%);
+}
+
+.div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.containerHome img {
+    max-width: 400px;
+}
+
+.containerHomeEnd {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    width: 90vw;
+    margin: 0 auto;
+    padding: 0em 2em;
+}
+
+.containerHomeEnd img {
+    max-width: 600px;
+}
+
+.containerHomeEnd h2 {
+    margin-bottom: 1em;
+    text-align: center;
+    font-size: 2em;
+    max-width: 300px;
+    color: #333;
+}
+
+.containerHomeEnd p {
+    text-align: justify;
+    font-size: 1.5em;
+    font-weight: 500;
+    max-width: 300px;
+    color: #555;
+}
