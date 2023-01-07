@@ -10,10 +10,12 @@ class Historico:
         self.transacoes = []
 
     def imprime(self):
-        print(f'Data de abertura: {self.data_abertura}')
-        print('Transações: ')
+        data = f'Data de abertura: {self.data_abertura}\n'
+        data += 'Transações: \n'
         for t in self.transacoes:
-            print('-', t)
+            data += f'- {t}\n'
+
+        return data
 
     def criaData(self):
         aux = dt.datetime.now()
