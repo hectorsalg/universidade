@@ -13,7 +13,7 @@ class Banco:
         p = Cliente(nome, sobrenome, cpf)
         if cpf in self.contas.keys():
             return False
-        self.contas[cpf] = Conta(num, p, 0, 1000.0, user, senha)
+        self.contas[cpf] = Conta(num, p, 0.0, 1000.0, user, senha)
 
         if user in self.login.keys():
             return False

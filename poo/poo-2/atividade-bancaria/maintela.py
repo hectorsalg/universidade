@@ -112,9 +112,15 @@ class Main(QMainWindow, Ui_Main):
 
     def entrarConta(self):
         self.QtStack.setCurrentIndex(1)
+        self.telaDeposito.lineEditDepositar.setText('')
+        self.telaTransferir.lineEditTransferir.setText('')
+        self.telaTransferir.lineEditConta.setText('')
+        self.telaSacar.lineEditSacar.setText('')
 
     def entrarCadastro(self):
         self.QtStack.setCurrentIndex(2)
+        self.telaInicial.lineEditUser.setText('')
+        self.telaInicial.lineEditSenha.setText('')
 
     def entrarDepositar(self):
         self.QtStack.setCurrentIndex(3)
@@ -127,7 +133,8 @@ class Main(QMainWindow, Ui_Main):
 
     def entrarExtrato(self):
         self.QtStack.setCurrentIndex(6)
-        self.telaExtrato.labelExtrato.setText(self.banco.contas[self.conta].historico.imprime())
+        self.telaExtrato.labelExtrato.setText(
+            f'Saldo: {self.banco.contas[self.conta].saldo}\nLimite: {self.banco.contas[self.conta].limite}\n{self.banco.contas[self.conta].historico.imprime()}')
 
     def cadastrar(self):
         nome = self.telaCadastro.lineEditNome.text()
@@ -155,6 +162,7 @@ class Main(QMainWindow, Ui_Main):
     def depositar(self):
         valor = float(self.telaDeposito.lineEditDepositar.text())
         if self.banco.contas[self.conta].deposita(valor):
+            self.telaDeposito.lineEditDepositar.setText('')
             QMessageBox.information(None, 'Deposito', 'Deposito realizado com sucesso.')
         else:
             QMessageBox.information(None, 'Deposito', 'Limite insuficiente.')    
@@ -162,16 +170,19 @@ class Main(QMainWindow, Ui_Main):
     def sacar(self):
         valor = float(self.telaSacar.lineEditSacar.text())
         if self.banco.contas[self.conta].deposita(valor):
+            self.telaSacar.lineEditSacar.setText('')
             QMessageBox.information(None, 'Saque', 'Saque realizado com sucesso.')
         else:
             QMessageBox.information(None, 'Saque', 'Saldo insuficiente.')  
     
     def transferir(self):
-        valor = float(self.telaSacar.lineEditSacar.text())
+        valor = float(self.telaTransferir.lineEditTransferir.text())
         destino = int(self.telaTransferir.lineEditConta.text())
         flag = self.banco.verificarNum(destino)
         if self.banco.verificarNum(destino):
             self.banco.contas[self.conta].transfere_para(self.banco.contas[flag[1]], valor)
+            self.telaTransferir.lineEditTransferir.setText('')
+            self.telaTransferir.lineEditConta.setText('')
             QMessageBox.information(None, 'Transferir', 'Transferências realizada com sucesso.')
         else:
             QMessageBox.information(None, 'Transferir', 'Saldo insuficiente ou conta inexistente.')
