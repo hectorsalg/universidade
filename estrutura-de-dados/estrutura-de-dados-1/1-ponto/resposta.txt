@@ -1,0 +1,3 @@
+1 - Ocorre um erro pois a Struct precisa estar na biblioteca (arquivo .h), para que seja possivel o acesso pela main, dessa forma, ela só pode ser acessada dentro do arquivo imagem.c.
+
+2 - Não ocorre erro como na primeira questão, pois a função SetPixelValue e GetPixelValue estão dentro do arquivo imagem.c, com isso, a estrutura pode ser acessada.

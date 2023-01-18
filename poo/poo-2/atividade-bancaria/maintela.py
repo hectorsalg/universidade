@@ -134,7 +134,7 @@ class Main(QMainWindow, Ui_Main):
     def entrarExtrato(self):
         self.QtStack.setCurrentIndex(6)
         self.telaExtrato.labelExtrato.setText(
-            f'Saldo: {self.banco.contas[self.conta].saldo}\nLimite: {self.banco.contas[self.conta].limite}\n{self.banco.contas[self.conta].historico.imprime()}')
+            f'Saldo: {self.banco.contas[self.conta].saldo}\nLimite: {self.banco.contas[self.conta].limite}\nConta: {self.banco.contas[self.conta].numero}\n{self.banco.contas[self.conta].historico.imprime()}')
 
     def cadastrar(self):
         nome = self.telaCadastro.lineEditNome.text()
