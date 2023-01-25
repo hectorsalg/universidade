@@ -4,6 +4,7 @@ import datetime as dt
 
 tempo = dt.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
+import mysql.connector as sql
 
 class Conta:
 

@@ -11,9 +11,7 @@ from teladeposito import TelaDeposito
 from telasacar import TelaSacar
 from telatransferir import TelaTransferir
 
-from banco import Banco
-from cliente import Cliente
-from conta import Conta
+from bancocliente import *
 
 class Ui_Main(QtWidgets.QWidget):
     def setupUi(self, Main):
@@ -64,11 +62,11 @@ class Main(QMainWindow, Ui_Main):
         super(Main, self).__init__(None)
         self.setupUi(self)
 
-        self.banco = Banco()
+        self.bancoCliente = bancoCliente()
 
         self.telaInicial.btnCadastrar.clicked.connect(self.entrarCadastro)
         self.telaInicial.btnLogin.clicked.connect(self.login)
-        self.telaInicial.btnSair.clicked.connect(sys.exit)
+        self.telaInicial.btnSair.clicked.connect(self.sair)
 
         self.telaCadastro.btnCadastrar.clicked.connect(self.cadastrar)
         self.telaCadastro.btnVoltar.clicked.connect(self.voltarInicial)
@@ -78,22 +76,36 @@ class Main(QMainWindow, Ui_Main):
         self.telaConta.btnTransferir.clicked.connect(self.entrarTransferir)
         self.telaConta.btnExtrato.clicked.connect(self.entrarExtrato)
         self.telaConta.btnVoltar.clicked.connect(self.voltarInicial)
-        self.telaConta.btnSair.clicked.connect(sys.exit)
+        self.telaConta.btnSair.clicked.connect(self.sair)
 
         self.telaDeposito.btnDepositar.clicked.connect(self.depositar)
         self.telaDeposito.btnVoltar.clicked.connect(self.entrarConta)
-        self.telaDeposito.btnSair.clicked.connect(sys.exit)
+        self.telaDeposito.btnSair.clicked.connect(self.sair)
 
         self.telaSacar.btnSacar.clicked.connect(self.sacar)
         self.telaSacar.btnVoltar.clicked.connect(self.entrarConta)
-        self.telaSacar.btnSair.clicked.connect(sys.exit)
+        self.telaSacar.btnSair.clicked.connect(self.sair)
 
         self.telaTransferir.btnTransferir.clicked.connect(self.transferir)
         self.telaTransferir.btnVoltar.clicked.connect(self.entrarConta)
-        self.telaTransferir.btnSair.clicked.connect(sys.exit)
+        self.telaTransferir.btnSair.clicked.connect(self.sair)
 
         self.telaExtrato.btnVoltar.clicked.connect(self.entrarConta)
-        self.telaExtrato.btnSair.clicked.connect(sys.exit)
+        self.telaExtrato.btnSair.clicked.connect(self.sair)
+
+
+    def serverConnect(self, request):
+        self.bancoCliente.send(request.encode())
+        recv = self.bancoCliente.recv(1024)
+        flag = recv.decode()
+        flag = flag.replace("(", "").replace(")", "").replace("[", "").replace("]", "").replace(",", "").replace("'", '').split()
+        return flag
+
+    def sair(self):
+        numero = 404
+        sys.exit
+        self.bancoCliente.send(numero.encode())
+        self.bancoCliente.close()
 
     def voltarInicial(self):
         self.QtStack.setCurrentIndex(0)
@@ -107,6 +119,8 @@ class Main(QMainWindow, Ui_Main):
             self.conta = flag[1]
             self.telaInicial.lineEditUser.setText('')
             self.telaInicial.lineEditSenha.setText('')
+            conta = [1, user, senha]
+            self.bancoCliente.send(conta.encode())
         else:
             QMessageBox.information(None, 'Login', 'Usuário ou senha incorreto.')
 
@@ -143,16 +157,15 @@ class Main(QMainWindow, Ui_Main):
         user = self.telaCadastro.lineEditUser.text()
         senha = self.telaCadastro.lineEditSenha.text()
         if not(nome == '' or sobrenome == '' or cpf == '' or user == '' or senha == ''):
-            num = random.randint(0, 9999)
-            while self.banco.busca(num):
-                num = random.randint(0, 9999)
-            if (self.banco.addConta(nome, sobrenome, cpf, user, senha, num)):
-                print(num)
+            flag = self.serverConnect(f'addconta*{nome}*{sobrenome}*{cpf}*{user}*{senha}')
+            if ():
                 self.telaCadastro.lineEditNome.setText('')
                 self.telaCadastro.lineEditSobrenome.setText('')
                 self.telaCadastro.lineEditCPF.setText('')
                 self.telaCadastro.lineEditUser.setText('')
                 self.telaCadastro.lineEditSenha.setText('')
+                conta = [0, nome, sobrenome, cpf, user, senha]
+                self.bancoCliente.send(conta.encode())
                 QMessageBox.information(None, 'Cadastro', 'Cadastro realizado com sucesso.')
             else:
                 QMessageBox.information(None, 'Cadastro', 'O CPF já consta no banco de dados!')
@@ -161,7 +174,8 @@ class Main(QMainWindow, Ui_Main):
     
     def depositar(self):
         valor = float(self.telaDeposito.lineEditDepositar.text())
-        if self.banco.contas[self.conta].deposita(valor):
+        if True: 
+        # self.banco.contas[self.conta].deposita(valor):
             self.telaDeposito.lineEditDepositar.setText('')
             QMessageBox.information(None, 'Deposito', 'Deposito realizado com sucesso.')
         else:
