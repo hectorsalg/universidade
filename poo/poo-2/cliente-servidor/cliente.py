@@ -1,10 +1,12 @@
 import socket
 # ipconfig CMD
-ip = '10.180.84.97'
-port = 3232
+ip = 'localhost'
+port = 1234
 addr = ((ip, port))
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect(addr)
+mensagem = input('digite seu nome: ')
+client_socket.send(mensagem.encode())
 
 while(True):
     try:
