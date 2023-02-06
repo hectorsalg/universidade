@@ -186,12 +186,15 @@ class Ui_MainWindow(object):
 
     def botaoBusca(self):
         cpf = self.lineEdit_5.text()
-        pessoa = self.cad.buscaPessoa(cpf)
-        if (pessoa!=None):
-            self.lineEdit_6.setText(pessoa.nome)
-            self.lineEdit_7.setText(pessoa.endereco)
-            self.lineEdit_8.setText(pessoa.nascimento)
+        pbusca = self.cad.buscaPessoa(cpf)
+        if pbusca != None:
+            self.lineEdit_6.setText(pbusca.nome)
+            self.lineEdit_7.setText(pbusca.endereco)
+            self.lineEdit_8.setText(pbusca.nascimento)
         else:
+            self.lineEdit_6.setText('')
+            self.lineEdit_7.setText('')
+            self.lineEdit_8.setText('')
             QMessageBox.information(None, 'Busca', 'CPF não encontrado!')
 
 

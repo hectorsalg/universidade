@@ -6,10 +6,13 @@ class Cadastro:
         self._listaPessoas = {}
 
     def addPessoa(self, pessoa):
-        self._listaPessoas[pessoa.cpf] = [pessoa]
+        if not(self.buscaPessoa(pessoa.cpf)):
+            self._listaPessoas[pessoa.cpf] = pessoa
+            return True
+        return False
 
     def buscaPessoa(self, cpf):
         for cpfSource in self._listaPessoas:
             if (cpfSource == cpf):
-                return True
-        return False
+                return self._listaPessoas[cpf]
+        return None
