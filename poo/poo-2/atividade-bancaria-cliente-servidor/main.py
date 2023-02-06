@@ -61,16 +61,11 @@ class Main(QMainWindow, Ui_Main):
         super(Main, self).__init__(None)
         self.setupUi(self)
         
-        try:
-            self.server = server_cliente()
-        except ConnectionRefusedError:
-            QtWidgets.QMessageBox.information(None, 'ERROR', f'Não foi possível conectar ao servidor.'
-                                                             f'\nVerifique a conexão e tente novamente')
-            sys.exit()
+        self.server = server_cliente()
 
         self.telaInicial.btnCadastrar.clicked.connect(self.BotaoParaTelaCadastro)
         self.telaInicial.btnLogin.clicked.connect(self.BotaoLogin)
-        self.telaInicial.btnSair.clicked.connect(sys.exit)
+        self.telaInicial.btnSair.clicked.connect(self.sair)
 
         self.telaCadastro.btnCadastrar.clicked.connect(self.BotaoCadastrar)
         self.telaCadastro.btnVoltar.clicked.connect(self.BotaoVoltarTelaInicial)
@@ -80,22 +75,27 @@ class Main(QMainWindow, Ui_Main):
         self.telaConta.btnTransferir.clicked.connect(self.BotaoParaTelaTransferir)
         self.telaConta.btnExtrato.clicked.connect(self.BotaoParaTelaHistorico)
         self.telaConta.btnVoltar.clicked.connect(self.BotaoVoltarTelaInicial)
-        self.telaConta.btnSair.clicked.connect(sys.exit)
+        self.telaConta.btnSair.clicked.connect(self.sair)
 
-        self.telaDeposito.btnDepositar.clicked.connect(self.BotaoDepoistar)
+        self.telaDeposito.btnDepositar.clicked.connect(self.BotaoDepositar)
         self.telaDeposito.btnVoltar.clicked.connect(self.BotaoParaTelaConta)
-        self.telaDeposito.btnSair.clicked.connect(sys.exit)
+        self.telaDeposito.btnSair.clicked.connect(self.sair)
 
         self.telaSacar.btnSacar.clicked.connect(self.BotaoSacar)
         self.telaSacar.btnVoltar.clicked.connect(self.BotaoParaTelaConta)
-        self.telaSacar.btnSair.clicked.connect(sys.exit)
+        self.telaSacar.btnSair.clicked.connect(self.sair)
 
         self.telaTransferir.btnTransferir.clicked.connect(self.BotaoTransferir)
         self.telaTransferir.btnVoltar.clicked.connect(self.BotaoParaTelaConta)
-        self.telaTransferir.btnSair.clicked.connect(sys.exit)
+        self.telaTransferir.btnSair.clicked.connect(self.sair)
 
         self.telaExtrato.btnVoltar.clicked.connect(self.BotaoParaTelaConta)
-        self.telaExtrato.btnSair.clicked.connect(sys.exit)
+        self.telaExtrato.btnSair.clicked.connect(self.sair)
+
+    def sair(self):
+        
+        self.request_server('sair')
+        sys.exit()
 
     def BotaoVoltarTelaInicial(self):
         self.QtStack.setCurrentIndex(0)
@@ -126,7 +126,7 @@ class Main(QMainWindow, Ui_Main):
         self.server.send(request.encode())
         recv = self.server.recv(2048)
         flag = recv.decode()
-        print(flag, type(flag))
+        print(flag)
         flag = flag.replace("(", "").replace(")", "").replace("[", "").replace("]", "").replace(",", "").replace("'", '').split()
         return flag
     
@@ -171,7 +171,7 @@ class Main(QMainWindow, Ui_Main):
             solicit = f'login*{usuario}*{senha}'
             flag = self.request_server(solicit)
             print(flag, type(flag))
-            if flag[0] == 'True':
+            if flag[0]:
                 self.numero = int(flag[3])
                 self.QtStack.setCurrentIndex(1)
             else:
@@ -181,13 +181,14 @@ class Main(QMainWindow, Ui_Main):
         self.telaInicial.lineEditUser.setText("")
         self.telaInicial.lineEditSenha.setText("")
 
-    def BotaoDepoistar(self):
+    def BotaoDepositar(self):
         valor = self.telaDeposito.lineEditDepositar.text()
         if valor != '':
             if valor.replace('.','').isdigit():
                 solicit = f'depositar*{self.numero}*{float(valor)}'
-                self.request_server(solicit)
-                QMessageBox.information(None, 'Deposito', 'Deposito realizado com sucesso.')
+                flag = self.request_server(solicit)
+                noti = self.concatenar(flag)
+                QMessageBox.information(None, 'Deposito', noti)
             else:
                 QMessageBox.information(None, 'Deposito', 'Informe somente números.')
         else:

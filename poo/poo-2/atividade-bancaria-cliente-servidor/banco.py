@@ -5,7 +5,7 @@ import datetime
 class Banco():
 
     def __init__(self):
-        self.conexao = mysql.connect(host='localhost', db='pooii', user='root', password='$algueiroS20', autocommit=True)
+        self.conexao = mysql.connect(host='localhost', db='pooii', user='root', password='', autocommit=True)
         sql = """CREATE TABLE IF NOT EXISTS cliente(id int AUTO_INCREMENT PRIMARY KEY NOT NULL, cpf varchar(11) NOT NULL, nome varchar(10) NOT NULL, sobrenome varchar(10) NOT NULL, usuario varchar(12) NOT NULL, senha varchar(200) NOT NULL, numero int(100) NOT NULL, saldo float NOT NULL, limite float NOT NULL, historico varchar(1000) NOT NULL);"""
         self.cursor = self.conexao.cursor()
         self.cursor.execute(sql)
@@ -19,13 +19,11 @@ class Banco():
                     if not self.verificarNumero(numero):
                         self.numero = numero
                         break
-                query = f'INSERT INTO cliente(cpf, nome, sobrenome, usuario, senha, numero, saldo, limite, historico) VALUES ("{cpf}", "{nome}", "{sobrenome}", "{usuario}", MD5("{senha}"), {numero}, {saldo}, {limite}, "Data de de abertura: {data}")'
+                query = f'INSERT INTO cliente(cpf, nome, sobrenome, usuario, senha, numero, saldo, limite, historico) VALUES ("{cpf}", "{nome}", "{sobrenome}", "{usuario}", MD5("{senha}"), {numero}, {saldo}, {limite}, "Data de de abertura: {data}\n")'
                 self.cursor.execute(query)
                 return True, "Cadastro realizado com sucesso."
             else:
-                return False, 'Usuário já estar cadastrado.'
-        else:
-            return False, 'CPF já estar cadastrado.'
+                return False, 'CPF já estar cadastrado.'
     
     def login(self, usuario, senha):
         flag = self.verificarUsuario(usuario, senha, False)
@@ -35,7 +33,7 @@ class Banco():
             print(resul)
             return True, resul
         else:
-            return flag
+            return flag, "Senha ou Usuário incorretos."
 
     def verificarUsuario(self, usuario, senha = None, UserPassword = True):
         if UserPassword:
@@ -51,12 +49,12 @@ class Banco():
                 return True, 'Exite.'
             return False, 'Usuário ou senha não encontrado.'
     
-    def verificaSenha(self, numero):
-        self.cursor.execute(f'select senha, numero from cliente where numero = {numero}')
-        flag = self.cursor.fetchall()
-        if flag:
-            return True
-        return False
+    # def verificaSenha(self, numero):
+    #     self.cursor.execute(f'select senha, numero from cliente where numero = {numero}')
+    #     flag = self.cursor.fetchall()
+    #     if flag:
+    #         return True
+    #     return False
     
     def verificarCPF(self, cpf):
         self.cursor.execute(f'SELECT cpf FROM cliente WHERE cpf = "{cpf}"')
@@ -100,7 +98,7 @@ class Banco():
         his = flag[0][0] + his
         self.cursor.execute(f'update cliente set historico = "{his}" where numero = {numero}')
 
-    def depositar(self,  numero, valor, flag=True):
+    def depositar(self,  numero, valor, frase=True):
         valor = float(valor)
         flag = self.get_saldo(numero)
         print(flag)
@@ -109,12 +107,12 @@ class Banco():
         else:
             self.set_saldo(numero, valor)
             data = datetime.datetime.now().strftime("%d/%m/%y %H:%M")
-            if flag:
-                his = f" Deposito:      Valor: {valor:.2f}       Data: {data}"
+            if frase:
+                his = f"Deposito:\nValor: {valor:.2f}\nData: {data}\n"
                 self.set_historico(numero, his)
-            return True, "Deposito realizado com sucesso."
+                return True, "Deposito realizado com sucesso."
 
-    def sacar(self, numero, valor, flag=True):
+    def sacar(self, numero, valor, frase=True):
         valor = float(valor)
         flag = self.get_saldo(numero)
         if valor > flag[0][0] or valor <= 0:
@@ -122,8 +120,8 @@ class Banco():
         else:
             self.set_saldo(numero, valor, False)
             data = datetime.datetime.now().strftime("%d/%m/%y %H:%M")
-            if flag:
-                his = f" Saque:\n      Valor: {valor:.2f}\n       Data: {data}"
+            if frase:
+                his = f"Saque:\nValor: {valor:.2f}\nData: {data}\n"
                 self.set_historico(numero, his)
             return True, "Saque realizado com sucesso."
 
@@ -133,9 +131,9 @@ class Banco():
         if retirou[0]:
             self.depositar(destino, valor, False)
             data = datetime.datetime.now().strftime("%d/%m/%y %H:%M")
-            his = f" Transferencia:       Enviou para: {destino}\n       Valor: {valor:.2f}\n       Data: {data}"
+            his = f"Transferencia:\nEnviou para: {destino}\nValor: {valor:.2f}\nData: {data}\n"
             self.set_historico(numero, his)
-            his = f" Transferencia:       Recebeu de: {numero}       Valor: {valor:.2f}       Data: {data}"
+            his = f"Transferencia:\nRecebeu de: {numero}\nValor: {valor:.2f}\nData: {data}\n"
             self.set_historico(destino, his)
             return True, "Transferencia realizada com sucesso."
         else:
