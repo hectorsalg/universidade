@@ -11,18 +11,16 @@ class ClienteThread(threading.Thread):
     def run(self):
         try:
             while True:
-                solicitaco = self.clientSock.recv(2048).decode().split("*") 
+                solicitaco = self.clientSock.recv(2048).decode().split("*")
                 print(solicitaco)
-                if solicitaco:
-                    metodo = solicitaco.pop(0)
-                    if metodo == 'sair':
-                        # self.clientSock.send(f'saiu'.encode())
-                        self.clientSock.close()
-                        break
-                    banco = Banco()
-                    func = getattr(banco, metodo)
-                    retorno = func(*solicitaco)
-                    self.clientSock.send(f'{retorno}'.encode()) 
+                metodo = solicitaco.pop(0)
+                if metodo == 'sair':
+                    self.clientSock.close()
+                    break
+                banco = Banco()
+                func = getattr(banco, metodo)
+                retorno = func(*solicitaco)
+                self.clientSock.send(f'{retorno}'.encode()) 
         except AttributeError:
             print('Error')
 

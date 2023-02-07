@@ -93,7 +93,6 @@ class Main(QMainWindow, Ui_Main):
         self.telaExtrato.btnSair.clicked.connect(self.sair)
 
     def sair(self):
-        
         self.request_server('sair')
         sys.exit()
 
@@ -170,12 +169,14 @@ class Main(QMainWindow, Ui_Main):
         if usuario != '' and senha != '':
             solicit = f'login*{usuario}*{senha}'
             flag = self.request_server(solicit)
-            print(flag, type(flag))
             if flag[0]:
+                print(flag[3])
                 self.numero = int(flag[3])
+                self.telaConta.labelConta.setText(f'Olá, {flag[1]}!\nNúmero da Conta: {flag[3]}')
                 self.QtStack.setCurrentIndex(1)
             else:
-                QMessageBox.information(None, 'Login', 'Usuário ou senha incorreto.')
+                noti = self.concatenar(flag)
+                QMessageBox.information(None, 'Login', noti)
         else:
             QMessageBox.information(None, 'Login', 'Todos os dados devem ser preenchidos.')
         self.telaInicial.lineEditUser.setText("")
