@@ -125,7 +125,6 @@ class Main(QMainWindow, Ui_Main):
         self.server.send(request.encode())
         recv = self.server.recv(2048)
         flag = recv.decode()
-        print(flag)
         flag = flag.replace("(", "").replace(")", "").replace("[", "").replace("]", "").replace(",", "").replace("'", '').split()
         return flag
     
@@ -170,9 +169,8 @@ class Main(QMainWindow, Ui_Main):
             solicit = f'login*{usuario}*{senha}'
             flag = self.request_server(solicit)
             if flag[0]:
-                print(flag[3])
                 self.numero = int(flag[3])
-                self.telaConta.labelConta.setText(f'Olá, {flag[1]}!\nNúmero da Conta: {flag[3]}')
+                self.telaConta.labelConta.setText(f'Olá, {flag[1]}!\nSaldo: R$ {float(flag[2]):.2f}\nNúmero da Conta: {flag[3]}')
                 self.QtStack.setCurrentIndex(1)
             else:
                 noti = self.concatenar(flag)
