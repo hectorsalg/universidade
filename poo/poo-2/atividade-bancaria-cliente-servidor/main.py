@@ -100,7 +100,12 @@ class Main(QMainWindow, Ui_Main):
         self.QtStack.setCurrentIndex(0)
 
     def BotaoParaTelaConta(self):
-        self.QtStack.setCurrentIndex(1)
+        solicit = f'login*{self.user}*{self.passw}'
+        flag = self.request_server(solicit)
+        if flag[0]:
+            self.numero = flag[3]
+            self.telaConta.labelConta.setText(f'Olá, {flag[1]}!\nSaldo: R$ {flag[2]}\nNúmero da Conta: {flag[3]}')
+            self.QtStack.setCurrentIndex(1)
 
     def BotaoParaTelaCadastro(self):
         self.QtStack.setCurrentIndex(2)
@@ -156,11 +161,6 @@ class Main(QMainWindow, Ui_Main):
                 QMessageBox.information(None, 'Cadastro', 'O CPF não existe')
         else:
             QMessageBox.information(None, 'Cadastro', 'Todos os dados devem estar preenchidos!')
-        self.telaCadastro.lineEditNome.setText("")
-        self.telaCadastro.lineEditSobrenome.setText("")
-        self.telaCadastro.lineEditCPF.setText("")
-        self.telaCadastro.lineEditUser.setText("")
-        self.telaCadastro.lineEditSenha.setText("")
 
     def BotaoLogin(self):
         usuario = self.telaInicial.lineEditUser.text()
@@ -169,8 +169,10 @@ class Main(QMainWindow, Ui_Main):
             solicit = f'login*{usuario}*{senha}'
             flag = self.request_server(solicit)
             if flag[0]:
-                self.numero = int(flag[3])
-                self.telaConta.labelConta.setText(f'Olá, {flag[1]}!\nSaldo: R$ {float(flag[2]):.2f}\nNúmero da Conta: {flag[3]}')
+                self.user = usuario
+                self.passw = senha
+                self.numero = flag[3]
+                self.telaConta.labelConta.setText(f'Olá, {flag[1]}!\nSaldo: R$ {flag[2]}\nNúmero da Conta: {flag[3]}')
                 self.QtStack.setCurrentIndex(1)
             else:
                 noti = self.concatenar(flag)

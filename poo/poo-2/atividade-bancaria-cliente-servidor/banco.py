@@ -47,8 +47,7 @@ class Banco():
             return False
         else:
             self.cursor.execute(f'SELECT usuario, senha FROM cliente WHERE usuario = "{usuario}" and senha = MD5("{senha}")')
-            exists = self.cursor.fetchall()
-            if exists:
+            if self.cursor.fetchall():
                 return True, 'Existe.'
             return False, 'Usuário ou senha não encontrado.'
     
@@ -94,7 +93,6 @@ class Banco():
     def depositar(self,  numero, valor, frase=True):
         valor = float(valor)
         flag = self.get_saldo(numero)
-        print(flag)
         if flag[0][1] < valor or valor <= 0 or flag[0][0] + valor > flag[0][1]:
             return False, "Não foi possível fazer o deposito."
         else:
@@ -102,7 +100,7 @@ class Banco():
             self.set_saldo(numero, valor)
             data = datetime.datetime.now().strftime("%d/%m/%y %H:%M")
             if frase:
-                his = f"Deposito: R$ {valor:.2f}\nData: {data}\n"
+                his = f"Deposito: R$ {valor:.2f} - Data: {data}\n"
                 self.set_historico(numero, his)
             self.sinc.release()
             return True, "Deposito realizado com sucesso."
@@ -117,7 +115,7 @@ class Banco():
             self.set_saldo(numero, valor, False)
             data = datetime.datetime.now().strftime("%d/%m/%y %H:%M")
             if frase:
-                his = f"Saque: R$ {valor:.2f}\nData: {data}\n"
+                his = f"Saque: R$ {valor:.2f} - Data: {data}\n"
                 self.set_historico(numero, his)
             self.sinc.release()
             return True, "Saque realizado com sucesso."
@@ -128,10 +126,10 @@ class Banco():
         if retirou:
             self.depositar(destino, valor, False)
             data = datetime.datetime.now().strftime("%d/%m/%y %H:%M")
-            his = f"Enviou: R$ Valor: {valor:.2f} de {destino}\nData: {data}\n"
+            his = f"Enviou: R$ Valor: {valor:.2f} de {destino} - Data: {data}\n"
             self.sinc.acquire()
             self.set_historico(numero, his)
-            his = f"Recebeu: R$ {valor:.2f} de conta: {numero}\nData: {data}\n"
+            his = f"Recebeu: R$ {valor:.2f} de conta: {numero} - Data: {data}\n"
             self.set_historico(destino, his)
             self.sinc.release()
             return True, "Transferencia realizada com sucesso."

@@ -12,7 +12,6 @@ class ClienteThread(threading.Thread):
         try:
             while True:
                 solicitaco = self.clientSock.recv(2048).decode().split("*")
-                print(solicitaco)
                 metodo = solicitaco.pop(0)
                 if metodo == 'sair':
                     self.clientSock.close()
@@ -33,7 +32,7 @@ class Servidor():
         self.serv_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #cria o socket
         self.serv_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) #reinicia o socket
         self.serv_socket.bind(addr) #define as portas e quais ips podem se conectar com o servidor
-        self.serv_socket.listen(10) #define o limite de conexões
+        self.serv_socket.listen(4) #define o limite de conexões
 
     def start(self):
         while True:
