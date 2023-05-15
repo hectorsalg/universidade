@@ -10,7 +10,7 @@ int main ()
 {
    int  fd, n;
    char linha[10];
-   char nome[]  = "~/Documentos/universidade/so/bart_simpsons.txt";
+   char nome[]  = "/home/hector/Documentos/universidade/so/bart_simpsons.txt";
 
 
    fd = open(nome, O_RDONLY);
