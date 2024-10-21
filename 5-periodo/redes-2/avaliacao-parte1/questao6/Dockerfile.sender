@@ -1,0 +1,6 @@
+# Dockerfile.sender
+FROM python:3.8
+WORKDIR /app
+COPY sender.py /app
+RUN pip install numpy
+CMD ["python", "sender.py"]

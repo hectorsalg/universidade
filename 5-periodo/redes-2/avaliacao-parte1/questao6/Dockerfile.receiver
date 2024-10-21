@@ -1,0 +1,6 @@
+# Dockerfile.receiver
+FROM python:3.8
+WORKDIR /app
+COPY receiver.py /app
+RUN pip install numpy
+CMD ["python", "receiver.py"]

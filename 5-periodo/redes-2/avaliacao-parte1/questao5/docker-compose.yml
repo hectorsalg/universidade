@@ -1,0 +1,23 @@
+version: '3'
+services:
+  receiver:
+    build:
+      context: .
+      dockerfile: Dockerfile.receiver
+    container_name: receiver
+    networks:
+      - udp_net
+
+  sender:
+    build:
+      context: .
+      dockerfile: Dockerfile.sender
+    container_name: sender
+    stdin_open: true # Permitir a entrada de dados do terminal
+    tty: true # Habilitar o modo TTY para o terminal
+    networks:
+      - udp_net
+
+networks:
+  udp_net:
+    driver: bridge

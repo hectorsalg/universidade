@@ -1,0 +1,42 @@
+services:
+  sender:
+    build:
+      context: .
+      dockerfile: Dockerfile.sender
+    networks:
+      - checksum_net
+
+  receiver:
+    build:
+      context: .
+      dockerfile: Dockerfile.receiver
+    networks:
+      - checksum_net
+
+  router1:
+    image: alpine
+    command: ["sleep", "infinity"]
+    networks:
+      - checksum_net
+
+  router2:
+    image: alpine
+    command: ["sleep", "infinity"]
+    networks:
+      - checksum_net
+
+  router3:
+    image: alpine
+    command: ["sleep", "infinity"]
+    networks:
+      - checksum_net
+
+  router4:
+    image: alpine
+    command: ["sleep", "infinity"]
+    networks:
+      - checksum_net
+
+networks:
+  checksum_net:
+    driver: bridge
