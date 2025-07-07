@@ -1,0 +1,83 @@
+version: '3'
+services:
+  zabbix_db:
+    image: mariadb:10
+    networks:
+      - zabbix_net
+    volumes:
+      - zabbix_db:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=zabbix
+      - MYSQL_USER=zabbix
+      - MYSQL_PASSWORD=zabbix
+      - MYSQL_ROOT_PASSWORD=root
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  zabbix_server:
+    image: zabbix/zabbix-server-mysql:latest
+    networks:
+      - zabbix_net
+    ports:
+      - "10051:10051"
+    environment:
+      - DB_SERVER_HOST=zabbix_db
+      - MYSQL_DATABASE=zabbix
+      - MYSQL_USER=zabbix
+      - MYSQL_PASSWORD=zabbix
+    depends_on:
+      - zabbix_db
+
+  zabbix_web:
+    image: zabbix/zabbix-web-nginx-mysql:latest
+    networks:
+      - zabbix_net
+    ports:
+      - "80:8080"
+      - "443:8443"
+    environment:
+      - DB_SERVER_HOST=zabbix_db
+      - MYSQL_DATABASE=zabbix
+      - MYSQL_USER=zabbix
+      - MYSQL_PASSWORD=zabbix
+      - ZBX_SERVER_HOST=zabbix_server
+      - PHP_TZ=America/Sao_Paulo
+    depends_on:
+      - zabbix_server
+
+  dispositivo1:
+    image: zabbix/zabbix-agent:latest
+    container_name: dispositivo1
+    environment:
+      - ZBX_SERVER_HOST=zabbix_server
+      - HOSTNAME=dispositivo1
+    networks:
+      - zabbix_net
+
+  dispositivo2:
+    image: zabbix/zabbix-agent:latest
+    container_name: dispositivo2
+    environment:
+      - ZBX_SERVER_HOST=zabbix_server
+      - HOSTNAME=dispositivo2
+    networks:
+      - zabbix_net
+
+  zabbix_agent_host:
+    image: zabbix/zabbix-agent:latest
+    container_name: zabbix_agent_host
+    environment:
+      - ZBX_SERVER_HOST=zabbix_server
+      - HOSTNAME=zabbix_host
+    volumes:
+      - /:/mnt/host:ro
+    networks:
+      - zabbix_net
+    privileged: true
+
+
+networks:
+  zabbix_net:
+    driver: bridge
+
+volumes:
+  zabbix_db:

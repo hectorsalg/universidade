@@ -1,0 +1,7 @@
+iniciar docker composer: docker-compose up -d
+
+pegar nome dos containers: docker ps
+
+pegar os ips: docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nome_do_container
+
+dos: ping ip_dd_dospositivo -l 1500 -n 10 -t
